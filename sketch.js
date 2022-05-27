@@ -3,7 +3,7 @@ const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 
-var engine, world, backgroundImg,boat;
+var engine, world, backgroundImg, boat;
 var canvas, angle, tower, ground, cannon;
 var balls = [];
 var boats = [];
@@ -27,7 +27,6 @@ function setup() {
   World.add(world, tower);
 
   cannon = new Cannon(180, 110, 130, 100, angle);
-  boat = new Boat(width-79, height - 60, 170, 170,-80);
 }
 
 function draw() {
@@ -36,19 +35,18 @@ function draw() {
 
   Engine.update(engine);
 
-  
-  rect(ground.position.x, ground.position.y, width * 2, 1);
- 
 
-  push();  
+  rect(ground.position.x, ground.position.y, width * 2, 1);
+
+
+  push();
   imageMode(CENTER);
-  image(towerImage,tower.position.x, tower.position.y, 160, 310);
+  image(towerImage, tower.position.x, tower.position.y, 160, 310);
   pop();
 
+  showBoats();
 
-  Matter.Body.setVelocity(boat.body,{x:-0.9, y:0})
-  boat.display()
-  
+
 
   for (var i = 0; i < balls.length; i++) {
     showCannonBalls(balls[i], i);
@@ -77,5 +75,26 @@ function showCannonBalls(ball, index) {
 function keyReleased() {
   if (keyCode === DOWN_ARROW) {
     balls[balls.length - 1].shoot();
+  }
+}
+
+function showBoats() {
+  if (boats.length > 0) {
+    if (boats[boats.length - 1].body.position.x < width - 300 | boats[boats.length - 1] === undefined) {
+      var position = [-40, -60, -70, -20];
+      var p = random(position);
+      var boat = new Boat(width, height - 60, 170, 170, p);
+      boats.push(boat);
+    }
+    for (var i = 0; i < boats.length; i = i + 1) {
+      if (boats[i]) {
+        Matter.Body.setVelocity(boats[i].body, { x: -0.9, y: 0 })
+        boats[i].display()
+      }
+    }
+  }
+  else {
+    var boat = new Boat(width - 79, height - 60, 170, 170, -80);
+    boats.push(boat);
   }
 }
